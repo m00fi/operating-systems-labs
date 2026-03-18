@@ -1,20 +1,20 @@
-CC = gcc
-CFLAGS = -std=gnu99 -Wall -fsanitize=address,undefined
-LDFLAGS = -fsanitize=address,undefined
-LDLIBS = -lpthread -lm
+override CFLAGS=-Wall -Wextra -Wshadow -Wno-unused-parameter -Wno-unused-const-variable -g -O0 -fsanitize=address,undefined
 
-TARGET = sop-bitronka
-SRC = sop-bitronka.c
+ifdef CI
+override CFLAGS=-Wall -Wextra -Wshadow -Werror -Wno-unused-parameter -Wno-unused-const-variable
+endif
 
-.PHONY: all clean
+NAME=sop-risk
 
-# Domyślny cel - kompilacja programu
-all: $(TARGET)
+.PHONY: clean all tidy
 
-# Reguła budowania pliku wykonywalnego
-$(TARGET): $(SRC)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(SRC) $(LDLIBS)
+all: ${NAME}
 
-# Cel czyszczący - usuwa plik wykonywalny i pliki obiektowe (jeśli powstaną)
+${NAME}: ${NAME}.c
+	gcc $(CFLAGS) -o ${NAME} ${NAME}.c
+
 clean:
-	rm -f $(TARGET) *.o
+	rm -f ${NAME}
+
+tidy:
+	rm page*

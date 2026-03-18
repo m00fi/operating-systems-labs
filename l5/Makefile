@@ -1,23 +1,17 @@
-CC = gcc
-CFLAGS = -std=gnu99 -Wall
+override CFLAGS=-std=c17 -Wall -Wextra -Wshadow -Wno-unused-parameter -Wno-unused-const-variable -g -O0 -fsanitize=address,undefined,leak
 
-TARGETS = prog22a
+ifdef CI
+override CFLAGS=-std=c17 -Wall -Wextra -Wshadow -Werror -Wno-unused-parameter -Wno-unused-const-variable
+endif
 
-all: $(TARGETS)
+NAME=sop-ants
 
-prog21a_s: prog21a_s.o
-	$(CC) $(CFLAGS) prog21a_s.o -o prog21a_s
+.PHONY: clean all
 
-prog21a_c: prog21a_c.o
-	$(CC) $(CFLAGS) prog21a_c.o -o prog21a_c
+all: ${NAME}
 
-prog22a: prog22a.o
-	$(CC) $(CFLAGS) prog22a.o -o prog22a
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+${NAME}: ${NAME}.c
+	$(CC) $(CFLAGS) -o ${NAME} ${NAME}.c
 
 clean:
-	rm -f *.o $(TARGETS)
-
-.PHONY: all clean
+	rm -f ${NAME}

@@ -1,16 +1,20 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -pedantic
+override CFLAGS=-Wall -Wextra -Wshadow -Wno-unused-parameter -Wno-unused-const-variable -g -O0 -fsanitize=address,undefined
 
-SRCS = prog13a.c prog13b.c prog14.c prog15.c prog16a.c prog16b.c example1.c example2.c
+ifdef CI
+override CFLAGS=-Wall -Wextra -Wshadow -Werror -Wno-unused-parameter -Wno-unused-const-variable
+endif
 
-BINS = $(SRCS:.c=)
+NAME=sop-collection
 
-all: $(BINS)
+.PHONY: clean all tidy
 
-%: %.c
-	$(CC) $(CFLAGS) $< -o $@
+all: ${NAME}
+
+${NAME}: ${NAME}.c
+	gcc $(CFLAGS) -o ${NAME} ${NAME}.c
 
 clean:
-	rm -f $(BINS)
+	rm -f ${NAME}
 
-.PHONY: all clean
+tidy:
+	rm skarbona_*
